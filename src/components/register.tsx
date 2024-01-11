@@ -180,7 +180,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
         </label>
         <input
           type="text"
-          id="email"
+          id="username"
           placeholder="Choose your username (3-20 characters)"
           autoComplete="off"
           onChange={(e) => handleUsernameInput(e)}
