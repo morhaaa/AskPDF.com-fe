@@ -9,25 +9,28 @@ interface RegisterProps {
 
 const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+  const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // from 3 to 20
+  const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
 
   const userMailRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<HTMLInputElement>(null);
   const pswRef = useRef<HTMLInputElement>(null);
   const confirmPswRef = useRef<HTMLInputElement>(null);
 
   const [userMail, setUserMail] = useState("");
   const [isValidMail, setIsValidMail] = useState<boolean>(false);
-  const [errMail, setErrMail] = useState<string | null>();
   const [userMailFocus, setUserMailFocus] = useState<boolean>(false);
+
+  const [username, setUsername] = useState("");
+  const [isValidUsername, setIsValidUsername] = useState<boolean>(false);
+  const [usernameFocus, setUsernameFocus] = useState<boolean>(false);
 
   const [psw, setPsw] = useState("");
   const [isValidPsw, setIsValidPsw] = useState<boolean>(false);
-  const [errPsw, setErrPsw] = useState<string | null>();
   const [pswFocus, setPswFocus] = useState<boolean>(false);
 
   const [confirmPsw, setConfirmPsw] = useState("");
   const [isValidConfirmPsw, setIsValidConfirmPsw] = useState<boolean>(false);
-  const [errConfirmPsw, setErrConfirmPsw] = useState<string | null>();
   const [confirmPswFocus, setConfirmPswFocus] = useState<boolean>(false);
 
   useEffect(() => {
@@ -42,6 +45,11 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
   }, [userMail]);
 
   useEffect(() => {
+    const isValidUsername = usernameRegex.test(username);
+    setIsValidUsername(isValidUsername);
+  }, [username]);
+
+  useEffect(() => {
     const isValidPsw = pswRegex.test(psw);
     setIsValidPsw(isValidPsw);
   }, [psw]);
@@ -54,6 +62,13 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
   const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     setUserMail(value);
+  };
+
+  const handleUsernameInput = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const value = e.target.value;
+    setUsername(value);
   };
 
   const handlePswInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -73,33 +88,67 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
   ): Promise<void> => {
     e.preventDefault();
 
-    setErrMail(isValidMail ? null : "Invalid email");
-    setErrPsw(isValidPsw ? null : "Invalid password");
-    setErrConfirmPsw(
-      isValidConfirmPsw ? null : "Invalid confirmation password"
-    );
+    let errors: string[] = [];
 
-    if (isValidMail && isValidPsw && isValidConfirmPsw) {
+    if (!isValidMail) {
+      errors.push("Invalid email");
+    }
+
+    if (!isValidUsername) {
+      errors.push(
+        "Invalid username. It must contain between 3 and 20 characters"
+      );
+    }
+
+    if (!isValidPsw) {
+      errors.push(
+        "Invalid password. It must contain:\n" +
+          "- At least 6 characters long\n" +
+          "- Must contain at least one letter (uppercase or lowercase)\n" +
+          "- Must contain at least one digit\n"
+      );
+    }
+
+    if (!isValidConfirmPsw) {
+      errors.push("Passwords do not match");
+    }
+
+    if (isValidMail && isValidUsername && isValidPsw && isValidConfirmPsw) {
       try {
         await axios.post(
-          `${process.env.BE_URL}/v1/register`,
-          JSON.stringify({ mail: userMail, password: psw }),
+          `${process.env.NEXT_PUBLIC_BE_URL}/v1/register`,
+          JSON.stringify({
+            email: userMail,
+            username: username,
+            password: psw,
+          }),
           {
             headers: { "Content-Type": "application/json" },
             withCredentials: true,
           }
         );
       } catch (e) {
-        toast.error("error");
+        toast.error("Error during registration");
       }
+    } else {
+      toast.error(
+        <ul className="list-disc pl-4 flex flex-col gap-2">
+          {errors.map((error, index) => (
+            <li key={index} className="text-red-600">
+              {error}
+            </li>
+          ))}
+        </ul>,
+        { style: { backgroundColor: "#fcbdb8", border: "0.5px red solid" } }
+      );
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-96">
-      <h1 className="text-3xl font-bold mb-6">Sign up</h1>
+      <h1 className="text-3xl font-bold mb-4">Sign up</h1>
 
-      <div className="mb-5">
+      <div className="mb-2">
         <label
           htmlFor="email"
           className="block text-md font-semibold text-gray-600"
@@ -109,6 +158,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
         <input
           type="text"
           id="email"
+          placeholder="Insert your email"
           autoComplete="off"
           onChange={(e) => handleEmailInput(e)}
           required
@@ -117,16 +167,34 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
           ref={userMailRef}
           className={`w-full px-4 py-3 border ${
             userMailFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
         />
-        <p className="h-3">
-          {errMail && (
-            <span className="text-red-500 text-sm mt-1">{errMail}</span>
-          )}
-        </p>
       </div>
 
-      <div className="mb-5">
+      <div className="mb-2">
+        <label
+          htmlFor="username"
+          className="block text-md font-semibold text-gray-600"
+        >
+          Username
+        </label>
+        <input
+          type="text"
+          id="email"
+          placeholder="Choose your username (3-20 characters)"
+          autoComplete="off"
+          onChange={(e) => handleUsernameInput(e)}
+          required
+          onFocus={() => setUsernameFocus(true)}
+          onBlur={() => setUsernameFocus(false)}
+          ref={usernameRef}
+          className={`w-full px-4 py-3 border ${
+            usernameFocus ? "border-blue-500" : "border-gray-300"
+          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
+        />
+      </div>
+
+      <div className="mb-2">
         <label
           htmlFor="password"
           className="block text-md font-semibold text-gray-600"
@@ -136,6 +204,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
         <input
           type="password"
           id="password"
+          placeholder="Enter a secure password"
           autoComplete="off"
           onChange={(e) => handlePswInput(e)}
           required
@@ -144,13 +213,8 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
           ref={pswRef}
           className={`w-full px-4 py-3 border ${
             pswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
         />
-        <p className="h-3">
-          {errPsw && (
-            <span className="text-red-500 text-sm mt-1">{errPsw}</span>
-          )}
-        </p>
       </div>
 
       <div className="mb-6">
@@ -163,6 +227,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
         <input
           type="password"
           id="confirmPassword"
+          placeholder="Confirm your password"
           autoComplete="off"
           onChange={(e) => handleConfirmPswInput(e)}
           required
@@ -171,13 +236,8 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
           ref={confirmPswRef}
           className={`w-full px-4 py-3 border ${
             confirmPswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
         />
-        <p className="h-3">
-          {errConfirmPsw && (
-            <span className="text-red-500 text-sm mt-1">{errConfirmPsw}</span>
-          )}
-        </p>
       </div>
 
       <button
