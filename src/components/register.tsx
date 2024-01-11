@@ -82,7 +82,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
     if (isValidMail && isValidPsw && isValidConfirmPsw) {
       try {
         await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_API}/register`,
+          `${process.env.BE_URL}/v1/register`,
           JSON.stringify({ mail: userMail, password: psw }),
           {
             headers: { "Content-Type": "application/json" },
@@ -97,12 +97,12 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-96">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
+      <h1 className="text-3xl font-bold mb-6">Sign up</h1>
 
-      <div className="mb-4">
+      <div className="mb-5">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-600"
+          className="block text-md font-semibold text-gray-600"
         >
           Email
         </label>
@@ -115,9 +115,9 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
           onFocus={() => setUserMailFocus(true)}
           onBlur={() => setUserMailFocus(false)}
           ref={userMailRef}
-          className={`w-full px-3 py-2 border ${
+          className={`w-full px-4 py-3 border ${
             userMailFocus ? "border-blue-500" : "border-gray-300"
-          } rounded focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
         <p className="h-3">
           {errMail && (
@@ -126,10 +126,10 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
         </p>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-5">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-600"
+          className="block text-md font-semibold text-gray-600"
         >
           Password
         </label>
@@ -142,9 +142,9 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
           onFocus={() => setPswFocus(true)}
           onBlur={() => setPswFocus(false)}
           ref={pswRef}
-          className={`w-full px-3 py-2 border ${
+          className={`w-full px-4 py-3 border ${
             pswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
         <p className="h-3">
           {errPsw && (
@@ -156,7 +156,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
       <div className="mb-6">
         <label
           htmlFor="confirmPassword"
-          className="block text-sm font-medium text-gray-600"
+          className="block text-md font-semibold text-gray-600"
         >
           Confirm Password
         </label>
@@ -169,9 +169,9 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
           onFocus={() => setConfirmPswFocus(true)}
           onBlur={() => setConfirmPswFocus(false)}
           ref={confirmPswRef}
-          className={`w-full px-3 py-2 border ${
+          className={`w-full px-4 py-3 border ${
             confirmPswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
         <p className="h-3">
           {errConfirmPsw && (
@@ -182,7 +182,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
 
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition duration-300"
+        className="w-full bg-blue-500 text-white p-3 rounded-xl hover:bg-blue-600 transition duration-300"
       >
         Submit
       </button>

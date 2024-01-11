@@ -71,12 +71,12 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
   };
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
+      <h1 className="text-3xl font-bold mb-6">Login</h1>
 
       <div className="mb-4">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-600"
+          className="block text-md font-semibold text-gray-600"
         >
           Email
         </label>
@@ -89,9 +89,9 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
           onFocus={() => setUserMailFocus(true)}
           onBlur={() => setUserMailFocus(false)}
           ref={userMailRef}
-          className={`w-full px-3 py-2 border ${
+          className={`w-full px-4 py-3 border ${
             userMailFocus ? "border-blue-500" : "border-gray-300"
-          } rounded focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
         <p className="h-3">
           {errMail && (
@@ -103,7 +103,7 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
       <div className="mb-6">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-600"
+          className="block text-md font-semibold text-gray-600"
         >
           Password
         </label>
@@ -116,9 +116,9 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
           onFocus={() => setPswFocus(true)}
           onBlur={() => setPswFocus(false)}
           ref={pswRef}
-          className={`w-full px-3 py-2 border ${
+          className={`w-full px-4 py-3 border ${
             pswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
         <p className="h-3">
           {errPsw && (
@@ -129,7 +129,7 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
 
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition duration-300"
+        className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
       >
         Submit
       </button>
