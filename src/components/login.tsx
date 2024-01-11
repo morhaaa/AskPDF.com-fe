@@ -12,19 +12,17 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
   const dispatch: AppDispatch = useDispatch();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+  const pswRegex = /^.{6,}$/;
 
   const userMailRef = useRef<HTMLInputElement>(null);
   const pswRef = useRef<HTMLInputElement>(null);
 
   const [userMail, setUserMail] = useState("");
   const [isValidMail, setIsValidMail] = useState<boolean>(false);
-  const [errMail, setErrMail] = useState<string | null>();
   const [userMailFocus, setUserMailFocus] = useState<boolean>(false);
 
   const [psw, setPsw] = useState("");
   const [isValidPsw, setIsValidPsw] = useState<boolean>(false);
-  const [errPsw, setErrPsw] = useState<string | null>();
   const [pswFocus, setPswFocus] = useState<boolean>(false);
 
   useEffect(() => {
@@ -58,17 +56,36 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
   ): Promise<void> => {
     e.preventDefault();
 
-    setErrMail(isValidMail ? null : "Invalid email");
-    setErrPsw(isValidPsw ? null : "Invalid password");
-
     if (isValidMail && isValidPsw) {
       try {
         dispatch(login({ email: userMail, psw: psw }));
       } catch (e) {
         toast.error("error");
       }
+    } else {
+      let errors: string[] = [];
+
+      if (!isValidMail) {
+        errors.push("Invalid email");
+      }
+
+      if (!isValidPsw) {
+        errors.push("Invalid password. It must contain at least 6 characters");
+      }
+
+      toast.error(
+        <ul className="list-disc pl-4 flex flex-col gap-2">
+          {errors.map((error, index) => (
+            <li key={index} className="text-red-600">
+              {error}
+            </li>
+          ))}
+        </ul>,
+        { style: { backgroundColor: "#fcbdb8", border: "0.5px red solid" } }
+      );
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
       <h1 className="text-3xl font-bold mb-6">Login</h1>
@@ -93,11 +110,6 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
             userMailFocus ? "border-blue-500" : "border-gray-300"
           } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
-        <p className="h-3">
-          {errMail && (
-            <span className="text-red-500 text-sm mt-1">{errMail}</span>
-          )}
-        </p>
       </div>
 
       <div className="mb-6">
@@ -120,11 +132,6 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
             pswFocus ? "border-blue-500" : "border-gray-300"
           } rounded-lg focus:outline-none focus:shadow-outline-blue`}
         />
-        <p className="h-3">
-          {errPsw && (
-            <span className="text-red-500 text-sm mt-1">{errPsw}</span>
-          )}
-        </p>
       </div>
 
       <button
