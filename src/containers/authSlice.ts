@@ -23,9 +23,10 @@ export const login = createAsyncThunk<IUser | null, LoginPayload>(
   "user/login",
   async ({ email, psw }) => {
     try {
+      console.log(process.env.NEXT_PUBLIC_BE_URL);
       const result = await axios.post(
-        `${process.env.BE_URL}/v1/auth`,
-        JSON.stringify({ email: email, psw: psw }),
+        `${process.env.NEXT_PUBLIC_BE_URL}/v1/auth`,
+        JSON.stringify({ email: email, password: psw }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
