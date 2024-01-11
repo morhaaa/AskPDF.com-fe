@@ -1,3 +1,4 @@
+"use client";
 import { store } from "@/containers/store";
 import React, { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
