@@ -1,6 +1,6 @@
+import toastError from "@/utils/toast-error";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import toast from "react-hot-toast";
 
 interface AuthState {
   data: IUser | null;
@@ -23,7 +23,6 @@ export const login = createAsyncThunk<IUser | null, LoginPayload>(
   "user/login",
   async ({ email, psw }) => {
     try {
-      console.log(process.env.NEXT_PUBLIC_BE_URL);
       const result = await axios.post(
         `${process.env.NEXT_PUBLIC_BE_URL}/v1/auth`,
         JSON.stringify({ email: email, password: psw }),
@@ -45,7 +44,11 @@ export const login = createAsyncThunk<IUser | null, LoginPayload>(
         throw new Error("Invalid response format");
       }
     } catch (error: any) {
-      toast.error(error.message);
+      toastError(
+        error.request.status === 401
+          ? " The email address or password you entered is not valid. Please check and try again."
+          : error.message
+      );
       console.error("Error fetching user info:", error);
       throw new Error("Failed to fetch user info");
     }
