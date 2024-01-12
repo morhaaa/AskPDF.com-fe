@@ -1,4 +1,5 @@
 "use client";
+import toastError from "@/utils/toast-error";
 import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -131,15 +132,14 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
         toast.error("Error during registration");
       }
     } else {
-      toast.error(
+      toastError(
         <ul className="list-disc pl-4 flex flex-col gap-2">
           {errors.map((error, index) => (
             <li key={index} className="text-red-600">
               {error}
             </li>
           ))}
-        </ul>,
-        { style: { backgroundColor: "#fcbdb8", border: "0.5px red solid" } }
+        </ul>
       );
     }
   };

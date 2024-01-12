@@ -1,6 +1,7 @@
 "use client";
 import { login } from "@/containers/authSlice";
 import { AppDispatch } from "@/containers/store";
+import toastError from "@/utils/toast-error";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -73,15 +74,14 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
         errors.push("Invalid password. It must contain at least 6 characters");
       }
 
-      toast.error(
+      toastError(
         <ul className="list-disc pl-4 flex flex-col gap-2">
           {errors.map((error, index) => (
             <li key={index} className="text-red-600">
               {error}
             </li>
           ))}
-        </ul>,
-        { style: { backgroundColor: "#fcbdb8", border: "0.5px red solid" } }
+        </ul>
       );
     }
   };
