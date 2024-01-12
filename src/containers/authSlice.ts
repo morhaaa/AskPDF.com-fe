@@ -31,13 +31,12 @@ export const login = createAsyncThunk<IUser | null, LoginPayload>(
           withCredentials: true,
         }
       );
-
       if (result.data) {
         const userInfo: IUser = {
-          username: result.data.username,
-          email: result.data.email,
-          memberShip: result.data.memberShip,
-          role: result.data.memberShip,
+          username: result.data.user.username,
+          email: result.data.user.email,
+          memberShip: result.data.user.memberShip,
+          role: result.data.user.memberShip,
         };
         return userInfo;
       } else {
