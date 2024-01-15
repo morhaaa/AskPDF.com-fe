@@ -5,6 +5,7 @@ import toastError from "@/utils/toast-error";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 interface LoginProps {
   showRegisterForm: () => void;
@@ -12,6 +13,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
   const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const pswRegex = /^.{6,}$/;
 
@@ -59,8 +61,12 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
 
     if (isValidMail && isValidPsw) {
       try {
-        dispatch(login({ email: userMail, psw: psw }));
+        dispatch(login({ email: userMail, psw: psw }))
+          .unwrap()
+          .then(() => router.push("/dashboard"))
+          .catch((error) => console.error("rejected", error));
       } catch (e) {
+        console.log(e);
         toast.error("error");
       }
     } else {
