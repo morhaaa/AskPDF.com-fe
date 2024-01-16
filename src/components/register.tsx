@@ -3,12 +3,10 @@ import toastError from "@/utils/toast-error";
 import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-interface RegisterProps {
-  showLoginForm: () => void;
-}
 
-const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
+const Register: React.FC= () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // from 3 to 20
   const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
@@ -33,6 +31,8 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
   const [confirmPsw, setConfirmPsw] = useState("");
   const [isValidConfirmPsw, setIsValidConfirmPsw] = useState<boolean>(false);
   const [confirmPswFocus, setConfirmPswFocus] = useState<boolean>(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (userMailRef.current) {
@@ -144,6 +144,11 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
     }
   };
 
+
+  const showLogin = ()=>{
+    router.push('/login')
+  }
+
   return (
     <form onSubmit={handleSubmit} className="w-96">
       <h1 className="text-3xl font-bold mb-4">Sign up</h1>
@@ -250,7 +255,7 @@ const Register: React.FC<RegisterProps> = ({ showLoginForm }) => {
       <div className="flex gap-1 w-full items-center justify-center pt-5">
         <p className="text-sm text-center ">Have an account?</p>
         <p
-          onClick={showLoginForm}
+          onClick={showLogin}
           className="text-sm text-center text-blue-500 font-medium cursor-pointer hover:underline"
         >
           Log in

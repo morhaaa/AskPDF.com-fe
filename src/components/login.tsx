@@ -7,11 +7,8 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
-interface LoginProps {
-  showRegisterForm: () => void;
-}
 
-const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
+const Login: React.FC= () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -92,6 +89,10 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
     }
   };
 
+  const showRegister = () => {
+    router.push('/sign-up')
+  }
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
       <h1 className="text-3xl font-bold mb-6">Login</h1>
@@ -152,7 +153,7 @@ const Login: React.FC<LoginProps> = ({ showRegisterForm }) => {
           Don&apos;t have an account?
         </p>
         <p
-          onClick={showRegisterForm}
+          onClick={showRegister}
           className="text-sm text-center md:text-right text-blue-500 font-medium cursor-pointer hover:underline"
         >
           Sign Up
