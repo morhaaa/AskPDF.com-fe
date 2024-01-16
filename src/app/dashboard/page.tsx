@@ -1,14 +1,18 @@
 'use client'
 import React from "react";
-import axios from "axios";
 import SideMenu from "@/components/side-menu";
 
 function Dashboard() {
 
 
-  return <div className="h-screen w-screen flex justify-center items-center">
+  return <main className="h-screen w-screen flex">
+    <nav className='basis-1/5 h-full'>
       <SideMenu/>
-  </div>;
+    </nav>
+    <div className="flex-1 h-full">
+
+    </div>
+  </main>;
 }
 
 export default Dashboard;
