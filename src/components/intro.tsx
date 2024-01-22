@@ -9,7 +9,7 @@ const Intro = () => {
       <div className="text-center flex flex-col items-center gap-y-6">
         <h1 className="text-5xl font-bold md:text-5xl lg:text-6xl">
           Start a Conversation with <br /> Your{" "}
-          <span className="text-blue-600"> Documents </span> .
+          <span className="text-blue-600"> Documents </span>.
         </h1>
         <p className="text-zinc-600 sm:text-lg font-medium">
           Empower Your PDFs with AI - Chat, Inquire, and Unlock the Intelligence
