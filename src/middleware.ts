@@ -10,7 +10,11 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(absoluteURL.toString());
   }
 
-  if (cookie && req.nextUrl.pathname.includes("/login") || req.nextUrl.pathname.includes("/sign-up")) {
+  if (
+    cookie &&
+    (req.nextUrl.pathname.includes("/login") ||
+      req.nextUrl.pathname.includes("/sign-up"))
+  ) {
     const absoluteURL = new URL("/dashboard", req.nextUrl.origin);
     return NextResponse.redirect(absoluteURL.toString());
   }
