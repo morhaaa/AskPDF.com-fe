@@ -1,13 +1,11 @@
-import Navbar from "@/components/navbar";
-import Image from "next/image";
+import Intro from "@/components/intro";
+import Features from "@/components/features";
 
 export default function Home() {
   return (
-    <main className="flex flex-col h-screen w-screen bg-gray-600 ">
-      <Navbar/>
-      <div className="flex-1">
-
-      </div>
+    <main className="flex flex-col items-center justify-center gap-y-8">
+      <Intro />
+      <Features />
     </main>
   );
 }
