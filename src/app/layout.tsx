@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers/providers";
-import Navbar from "@/components/navbar";
 
 const noto = Noto_Sans({
   subsets: ["latin"],
@@ -20,8 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={noto.className}>
-        <Navbar />
+      <body className={`${noto.className} min-h-screen antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
