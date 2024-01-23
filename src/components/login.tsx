@@ -109,6 +109,7 @@ const Login: React.FC = () => {
           id="email"
           autoComplete="off"
           onChange={(e) => handleEmailInput(e)}
+          placeholder="Insert your email"
           required
           onFocus={() => setUserMailFocus(true)}
           onBlur={() => setUserMailFocus(false)}
@@ -131,6 +132,7 @@ const Login: React.FC = () => {
           id="password"
           autoComplete="off"
           onChange={(e) => handlePswInput(e)}
+          placeholder="Insert your password"
           required
           onFocus={() => setPswFocus(true)}
           onBlur={() => setPswFocus(false)}
@@ -141,7 +143,7 @@ const Login: React.FC = () => {
         />
       </div>
 
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full py-6">
         <span className="font-bold text-medium"> Submit</span>
       </Button>
 
