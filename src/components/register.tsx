@@ -4,6 +4,7 @@ import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
 const Register: React.FC = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -195,12 +196,9 @@ const Register: React.FC = () => {
         />
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white p-3 rounded-xl hover:bg-blue-600 transition duration-300"
-      >
-        Submit
-      </button>
+      <Button type="submit" className="w-full py-6">
+        <span className="font-bold text-medium"> Submit</span>
+      </Button>
 
       <div className="flex gap-1 w-full items-center justify-center pt-5">
         <p className="text-sm text-center ">Have an account?</p>
