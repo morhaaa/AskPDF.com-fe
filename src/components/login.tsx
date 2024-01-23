@@ -6,9 +6,9 @@ import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
-
-const Login: React.FC= () => {
+const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -90,8 +90,8 @@ const Login: React.FC= () => {
   };
 
   const showRegister = () => {
-    router.push('/sign-up')
-  }
+    router.push("/sign-up");
+  };
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4">
@@ -141,12 +141,9 @@ const Login: React.FC= () => {
         />
       </div>
 
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
-      >
-        Submit
-      </button>
+      <Button type="submit" className="w-full">
+        <span className="font-bold text-medium"> Submit</span>
+      </Button>
 
       <div className="flex flex-col md:flex-row gap-1 items-center justify-center pt-5">
         <p className="text-sm text-center md:text-left">
