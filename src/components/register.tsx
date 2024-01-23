@@ -5,24 +5,17 @@ import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-
-const Register: React.FC= () => {
+const Register: React.FC = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/; // from 3 to 20
   const pswRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
 
   const userMailRef = useRef<HTMLInputElement>(null);
-  const usernameRef = useRef<HTMLInputElement>(null);
   const pswRef = useRef<HTMLInputElement>(null);
   const confirmPswRef = useRef<HTMLInputElement>(null);
 
   const [userMail, setUserMail] = useState("");
   const [isValidMail, setIsValidMail] = useState<boolean>(false);
   const [userMailFocus, setUserMailFocus] = useState<boolean>(false);
-
-  const [username, setUsername] = useState("");
-  const [isValidUsername, setIsValidUsername] = useState<boolean>(false);
-  const [usernameFocus, setUsernameFocus] = useState<boolean>(false);
 
   const [psw, setPsw] = useState("");
   const [isValidPsw, setIsValidPsw] = useState<boolean>(false);
@@ -46,11 +39,6 @@ const Register: React.FC= () => {
   }, [userMail]);
 
   useEffect(() => {
-    const isValidUsername = usernameRegex.test(username);
-    setIsValidUsername(isValidUsername);
-  }, [username]);
-
-  useEffect(() => {
     const isValidPsw = pswRegex.test(psw);
     setIsValidPsw(isValidPsw);
   }, [psw]);
@@ -63,13 +51,6 @@ const Register: React.FC= () => {
   const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     setUserMail(value);
-  };
-
-  const handleUsernameInput = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const value = e.target.value;
-    setUsername(value);
   };
 
   const handlePswInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -95,12 +76,6 @@ const Register: React.FC= () => {
       errors.push("Invalid email");
     }
 
-    if (!isValidUsername) {
-      errors.push(
-        "Invalid username. It must contain between 3 and 20 characters"
-      );
-    }
-
     if (!isValidPsw) {
       errors.push(
         "Invalid password. It must contain:\n" +
@@ -114,13 +89,12 @@ const Register: React.FC= () => {
       errors.push("Passwords do not match");
     }
 
-    if (isValidMail && isValidUsername && isValidPsw && isValidConfirmPsw) {
+    if (isValidMail && isValidPsw && isValidConfirmPsw) {
       try {
         await axios.post(
           `${process.env.NEXT_PUBLIC_BE_URL}/v1/register`,
           JSON.stringify({
             email: userMail,
-            username: username,
             password: psw,
           }),
           {
@@ -144,10 +118,9 @@ const Register: React.FC= () => {
     }
   };
 
-
-  const showLogin = ()=>{
-    router.push('/login')
-  }
+  const showLogin = () => {
+    router.push("/login");
+  };
 
   return (
     <form onSubmit={handleSubmit} className="w-96">
@@ -172,29 +145,6 @@ const Register: React.FC= () => {
           ref={userMailRef}
           className={`w-full px-4 py-3 border ${
             userMailFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
-        />
-      </div>
-
-      <div className="mb-2">
-        <label
-          htmlFor="username"
-          className="block text-md font-semibold text-gray-600"
-        >
-          Username
-        </label>
-        <input
-          type="text"
-          id="username"
-          placeholder="Choose your username (3-20 characters)"
-          autoComplete="off"
-          onChange={(e) => handleUsernameInput(e)}
-          required
-          onFocus={() => setUsernameFocus(true)}
-          onBlur={() => setUsernameFocus(false)}
-          ref={usernameRef}
-          className={`w-full px-4 py-3 border ${
-            usernameFocus ? "border-blue-500" : "border-gray-300"
           } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
         />
       </div>
