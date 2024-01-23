@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -24,6 +25,7 @@ const Login: React.FC = () => {
   const [psw, setPsw] = useState("");
   const [isValidPsw, setIsValidPsw] = useState<boolean>(false);
   const [pswFocus, setPswFocus] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   useEffect(() => {
     if (userMailRef.current) {
@@ -49,6 +51,10 @@ const Login: React.FC = () => {
   const handlePswInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value = e.target.value;
     setPsw(value);
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (
@@ -116,7 +122,7 @@ const Login: React.FC = () => {
           ref={userMailRef}
           className={`w-full px-4 py-3 border ${
             userMailFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
+          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
         />
       </div>
 
@@ -127,20 +133,31 @@ const Login: React.FC = () => {
         >
           Password
         </label>
-        <input
-          type="password"
-          id="password"
-          autoComplete="off"
-          onChange={(e) => handlePswInput(e)}
-          placeholder="Insert your password"
-          required
-          onFocus={() => setPswFocus(true)}
-          onBlur={() => setPswFocus(false)}
-          ref={pswRef}
+        <div
           className={`w-full px-4 py-3 border ${
             pswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue`}
-        />
+          } rounded-lg focus:outline-none focus:shadow-outline-blue flex items-center bg-white`}
+        >
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            autoComplete="off"
+            onChange={(e) => handlePswInput(e)}
+            placeholder="Insert your password"
+            required
+            onFocus={() => setPswFocus(true)}
+            onBlur={() => setPswFocus(false)}
+            ref={pswRef}
+            className="flex-1 outline-none placeholder:text-sm"
+          />
+          <button
+            type="button"
+            onClick={handleTogglePasswordVisibility}
+            className="text-gray-400 outline-none "
+          >
+            {showPassword ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
       </div>
 
       <Button type="submit" className="w-full py-6">

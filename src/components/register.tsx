@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { Eye, EyeOff } from "lucide-react";
 
 const Register: React.FC = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,10 +22,13 @@ const Register: React.FC = () => {
   const [psw, setPsw] = useState("");
   const [isValidPsw, setIsValidPsw] = useState<boolean>(false);
   const [pswFocus, setPswFocus] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const [confirmPsw, setConfirmPsw] = useState("");
   const [isValidConfirmPsw, setIsValidConfirmPsw] = useState<boolean>(false);
   const [confirmPswFocus, setConfirmPswFocus] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
 
   const router = useRouter();
 
@@ -64,6 +68,13 @@ const Register: React.FC = () => {
   ): void => {
     const value = e.target.value;
     setConfirmPsw(value);
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const handleToggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showPassword);
   };
 
   const handleSubmit = async (
@@ -157,20 +168,31 @@ const Register: React.FC = () => {
         >
           Password
         </label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter a secure password"
-          autoComplete="off"
-          onChange={(e) => handlePswInput(e)}
-          required
-          onFocus={() => setPswFocus(true)}
-          onBlur={() => setPswFocus(false)}
-          ref={pswRef}
+        <div
           className={`w-full px-4 py-3 border ${
             pswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
-        />
+          } rounded-lg focus:outline-none focus:shadow-outline-blue flex items-center bg-white`}
+        >
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            placeholder="Enter a secure password"
+            autoComplete="off"
+            onChange={(e) => handlePswInput(e)}
+            required
+            onFocus={() => setPswFocus(true)}
+            onBlur={() => setPswFocus(false)}
+            ref={pswRef}
+            className="flex-1 outline-none placeholder:text-sm"
+          />
+          <button
+            type="button"
+            onClick={handleTogglePasswordVisibility}
+            className="text-gray-400 outline-none "
+          >
+            {showPassword ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
       </div>
 
       <div className="mb-6">
@@ -180,20 +202,31 @@ const Register: React.FC = () => {
         >
           Confirm Password
         </label>
-        <input
-          type="password"
-          id="confirmPassword"
-          placeholder="Confirm your password"
-          autoComplete="off"
-          onChange={(e) => handleConfirmPswInput(e)}
-          required
-          onFocus={() => setConfirmPswFocus(true)}
-          onBlur={() => setConfirmPswFocus(false)}
-          ref={confirmPswRef}
+        <div
           className={`w-full px-4 py-3 border ${
             confirmPswFocus ? "border-blue-500" : "border-gray-300"
-          } rounded-lg focus:outline-none focus:shadow-outline-blue placeholder:text-sm`}
-        />
+          } rounded-lg focus:outline-none focus:shadow-outline-blue flex items-center bg-white`}
+        >
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            autoComplete="off"
+            onChange={(e) => handleConfirmPswInput(e)}
+            required
+            onFocus={() => setConfirmPswFocus(true)}
+            onBlur={() => setConfirmPswFocus(false)}
+            ref={confirmPswRef}
+            className="flex-1 outline-none placeholder:text-sm"
+          />
+          <button
+            type="button"
+            onClick={handleToggleConfirmPasswordVisibility}
+            className="text-gray-400 outline-none "
+          >
+            {showConfirmPassword ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
       </div>
 
       <Button type="submit" className="w-full py-6">
