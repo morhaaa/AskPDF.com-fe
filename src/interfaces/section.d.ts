@@ -1,1 +1,0 @@
-type Section = 'Overview' | 'Trade Tokens' | 'Top Exchanges' | 'Network'
