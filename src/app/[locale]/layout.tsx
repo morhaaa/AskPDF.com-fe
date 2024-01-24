@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "../globals.css";
 import Providers from "@/providers/providers";
+import { Locale, i18n } from "@/utils/i18nConfig";
+
+export async function generateStaticParams() {
+  return i18n.locales.map((locale) => ({ locale: locale }));
+}
 
 const noto = Noto_Sans({
   subsets: ["latin"],
@@ -14,13 +19,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { locale: Locale };
 }) {
   return (
-    <html lang="en">
+    <html lang={params.locale}>
       <body className={`${noto.className} min-h-screen antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers lang={params.locale}>{children}</Providers>
       </body>
     </html>
   );
