@@ -1,23 +1,27 @@
+'use client'
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import useTranslations from "@/hooks/useTranslations";
 
 const Intro = () => {
+  const { t } = useTranslations()
+  const dictionary = t.intro
+
   return (
     <div className="pt-20 px-10 rounded-2xl bg-gradient-to-b from-gray-100 to-gray-100/10 flex flex-col items-center gap-y-12 max-w-6xl">
       <div className="text-center flex flex-col items-center gap-y-6">
-        <h1 className="text-5xl font-bold md:text-5xl lg:text-6xl">
-          Start a Conversation with <br /> Your{" "}
-          <span className="text-blue-600"> Documents </span>.
+        <h1 className="text-5xl font-bold md:text-5xl lg:text-6xl px-4 md:px-5 lg:px-6">
+            {dictionary.startConversation}{" "}
+          <span className="text-blue-600">{dictionary.documents}</span>.
         </h1>
         <p className="text-zinc-600 sm:text-lg font-medium">
-          Empower Your PDFs with AI - Chat, Inquire, and Unlock the Intelligence
-          Within Your Documents
+          {dictionary.empowerPDFs}
         </p>
         <Button size="lg">
-          <Link href="/dashboard" className="flex items-center gap-x-2">
-            Get Started <ArrowRight />
+          <Link href="/dashboard" className="flex items-center font-bold gap-x-2">
+           {dictionary.getStarted} <ArrowRight />
           </Link>
         </Button>
       </div>
