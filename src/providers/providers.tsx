@@ -1,20 +1,24 @@
 "use client";
-import LangProvider from "@/components/lang-provider";
 import { store } from "@/containers/store";
-import { Locale } from "@/utils/i18nConfig";
 import React, { ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
+import LangProvider from "@/components/lang-provider";
+import { Locale } from "@/utils/i18nConfig";
+
 
 type ProvidersProps = {
   children: ReactNode;
-  lang: Locale;
+  locale: Locale
 };
-function Providers({ children, lang }: ProvidersProps) {
-  return (
+
+function Providers({children, locale}: ProvidersProps) {
+  return (   
     <Provider store={store}>
-      <Toaster />
-      <LangProvider lang={lang}>{children}</LangProvider>
+      <LangProvider lang={locale}>
+           <Toaster />
+           {children}
+           </LangProvider>
     </Provider>
   );
 }

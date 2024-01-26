@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
-import langSlice from "./dictionary-slice";
+import i18nSlice from "./i18nSlice";
 
 export const store = configureStore({
   reducer: {
     user: authSlice.reducer,
-    lang: langSlice.reducer,
+    i18n: i18nSlice.reducer,
   },
 });
 

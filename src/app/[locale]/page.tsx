@@ -1,9 +1,8 @@
 import Intro from "@/components/intro";
 import Features from "@/components/features";
 import Navbar from "@/components/navbar";
-import { Locale } from "@/utils/i18nConfig";
 
-export default function Home() {
+export default function Home() { 
   return (
     <main className="flex flex-col items-center justify-center gap-y-8">
       <Navbar />

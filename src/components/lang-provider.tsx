@@ -1,21 +1,19 @@
 import React, { ReactNode, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setLang } from "@/containers/dictionary-slice";
-import { AppDispatch } from "@/containers/store";
 import { Locale } from "@/utils/i18nConfig";
+import useTranslations from "@/hooks/useTranslations";
 
-function LangProvider({
-  lang,
-  children,
-}: {
-  lang: Locale;
-  children: ReactNode;
-}) {
-  const dispatch: AppDispatch = useDispatch();
+interface LangProviderProps{
+  lang: Locale,
+  children: ReactNode
+}
+
+function LangProvider({lang, children} : LangProviderProps) {
+
+  const { setLang } = useTranslations()
 
   useEffect(() => {
-    dispatch(setLang(lang));
-  }, [lang, dispatch]);
+    setLang(lang)
+  }, [lang, setLang]);
 
   return <div>{children}</div>;
 }
