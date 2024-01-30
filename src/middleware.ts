@@ -11,7 +11,7 @@ export default async function middleware(req: NextRequest) {
     !cookie &&
     protectedRoutes.some((route) => req.nextUrl.pathname.includes(route))
   ) {
-    const absoluteURL = new URL("/", req.nextUrl.origin);
+    const absoluteURL = new URL("/sign-up", req.nextUrl.origin);
     return NextResponse.redirect(absoluteURL.toString());
   }
 
