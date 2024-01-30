@@ -1,13 +1,14 @@
-"use client";
+import Dashboard from "@/components/dashboard";
+import Navbar from "@/components/navbar";
 import React from "react";
 
-function Dashboard() {
+function Page() {
   return (
-    <main className="h-screen w-screen flex">
-      <nav className="basis-1/5 h-full"></nav>
-      <div className="flex-1 h-full"></div>
+    <main className="flex flex-col items-center justify-center h-screen w-screen">
+      <Navbar/>
+      <Dashboard/>
     </main>
   );
 }
 
-export default Dashboard;
+export default Page;
