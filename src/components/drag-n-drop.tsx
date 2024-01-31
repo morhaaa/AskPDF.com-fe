@@ -41,6 +41,11 @@ const DND = () => {
     const res = await postPDF(file, user_id, getProgress)
     if (res.success) {
       setUploadedPdf(res.file as PDF)
+    } else {
+      toastError('Something went wrong')
+      setIsUploading(false)
+      setUploadingProgress(0)
+      setPdfToUpload(null)
     }
    }
 
@@ -58,8 +63,6 @@ const DND = () => {
     },
   });
 
- 
-
   const removeFile = async () => {
     try {
       if (uploadedPdf && uploadedPdf._id) {
@@ -68,6 +71,8 @@ const DND = () => {
        if(res && res.success){
         setPdfToUpload(null); 
         setUploadingProgress(0);
+       } else {
+        toastError('Something went wrong')
        }
 
       }
