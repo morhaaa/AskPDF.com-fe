@@ -5,23 +5,24 @@ import { Progress } from './ui/progress';
 import { Button } from './ui/button';
 import clsx from 'clsx';
 import toastError from '@/utils/toast-error';
+import { deletePDF, postPDF } from '@/api/pdf';
+import { useSelector } from 'react-redux';
+import { StoreType} from '@/containers/store';
 
 const DND = () => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [uploadingProgress, setUploadingProgress] = useState<number>(0);
-  const [updatedFile, setUpdatedFile] = useState<File | null>(null);
+  const [uploadedPdf, setUploadedPdf] = useState<PDF | null>(null);
+  const [pdfToUpload, setPdfToUpload] = useState<File | null>(null);
 
-  const startProgress = (): void => {
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += 1;
-      setUploadingProgress(currentProgress);
+  //Redux
+  const user_id = useSelector((store: StoreType)=> store.user.data?.accessToken) as string
 
-      if (currentProgress === 100) {
-        clearInterval(interval);
-        setIsUploading(false);
-      }
-    }, 2000 / 100);
+  const getProgress = (progress: number): void => {
+    setUploadingProgress(progress)
+    if(progress === 100) {
+      setIsUploading(false)
+    }
   };
 
   const sizeValidator = (file: File) => {
@@ -29,12 +30,19 @@ const DND = () => {
       toastError('Il file deve essere inferiore a 4MB.');
       return {
         code: 'size-too-large',
-        message: 'Size is larger than 4MB characters',
+        message: 'Size is larger than 4MB',
       };
     }
 
     return null;
   };
+
+  const uploadFileToDB = async(file: File) => {
+    const res = await postPDF(file, user_id, getProgress)
+    if (res.success) {
+      setUploadedPdf(res.file as PDF)
+    }
+   }
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -42,26 +50,38 @@ const DND = () => {
     },
     validator: sizeValidator,
     maxFiles: 1,
-    onDrop: (files) => {
-      setFile(files);
+    onDrop:async (files) => {
       setIsUploading(true);
-      startProgress();
+      const file = files[files.length - 1];
+      setPdfToUpload(file);      
+      await uploadFileToDB(file)
     },
   });
 
-  const setFile = (files: File[]): void => {
-    const file = files[files.length - 1];
-    setUpdatedFile(file);
-  };
+ 
 
-  const removeFile = (): void => {
-    setUpdatedFile(null);
-    setUploadingProgress(0);
+  const removeFile = async () => {
+    try {
+      if (uploadedPdf && uploadedPdf._id) {
+        const res = await deletePDF(uploadedPdf._id);
+        
+       if(res && res.success){
+        setPdfToUpload(null); 
+        setUploadingProgress(0);
+       }
+
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
   };
+  
+
+
 
   return (
     <section className="">
-      {updatedFile ? (
+      {pdfToUpload ? (
         <div className="space-y-6 pt-4">
           <div className="px-4 py-2 border border-neutral-200 bg-gray-200/50 shadow-md rounded-md w-full flex flex-col items-center justify-between gap-x-2">
             <div className="flex items-center w-full gap-x-2">
@@ -70,7 +90,7 @@ const DND = () => {
               </div>
               <div className="flex flex-col w-full flex-1">
                 <p className="font-semibold text-neutral-700">
-                  {updatedFile.name || 'File.pdf'}
+                  {pdfToUpload.name || 'File.pdf'}
                 </p>
                 {isUploading ? (
                   <Progress value={uploadingProgress} className="mt-1" />
@@ -93,6 +113,7 @@ const DND = () => {
             size={'sm'}
             className="w-full bg-blue-500 hover:bg-blue-400 shadow-md"
             disabled={isUploading}
+            onClick={()=>{}}
           >
             Start new conversation
           </Button>
