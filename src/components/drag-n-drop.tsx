@@ -16,72 +16,70 @@ const DND = () => {
   const [pdfToUpload, setPdfToUpload] = useState<File | null>(null);
 
   //Redux
-  const user_id = useSelector((store: StoreType)=> store.user.data?.accessToken) as string
+  const user_id = useSelector((store: StoreType) => store.user.data?.accessToken) as string;
 
   const getProgress = (progress: number): void => {
-    setUploadingProgress(progress)
-    if(progress === 100) {
-      setIsUploading(false)
+    setUploadingProgress(progress);
+    if (progress === 100) {
+      setIsUploading(false);
     }
   };
-
+  
   const sizeValidator = (file: File) => {
     if (file.size > 4 * 1024 * 1024) {
-      toastError('Il file deve essere inferiore a 4MB.');
+      toastError('File must be under 4MB.');
       return {
         code: 'size-too-large',
         message: 'Size is larger than 4MB',
       };
     }
-
+  
     return null;
   };
-
-  const uploadFileToDB = async(file: File) => {
-    const res = await postPDF(file, user_id, getProgress)
+  
+  const uploadFileToDB = async (file: File) => {
+    const res = await postPDF(file, user_id, getProgress);
     if (res.success) {
-      setUploadedPdf(res.file as PDF)
+      setUploadedPdf(res.file as PDF);
     } else {
-      toastError('Something went wrong')
-      setIsUploading(false)
-      setUploadingProgress(0)
-      setPdfToUpload(null)
+      toastError('Something went wrong');
+      setIsUploading(false);
+      setUploadingProgress(0);
+      setPdfToUpload(null);
     }
-   }
-
+  };
+  
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'application/pdf': [],
     },
     validator: sizeValidator,
     maxFiles: 1,
-    onDrop:async (files) => {
+    onDrop: async (files) => {
       setIsUploading(true);
       const file = files[files.length - 1];
-      setPdfToUpload(file);      
-      await uploadFileToDB(file)
+      setPdfToUpload(file);
+      await uploadFileToDB(file);
     },
   });
-
+  
   const removeFile = async () => {
     try {
       if (uploadedPdf && uploadedPdf._id) {
         const res = await deletePDF(uploadedPdf._id);
-        
-       if(res && res.success){
-        setPdfToUpload(null); 
-        setUploadingProgress(0);
-       } else {
-        toastError('Something went wrong')
-       }
-
+  
+        if (res && res.success) {
+          setPdfToUpload(null);
+          setUploadingProgress(0);
+        } else {
+          toastError('Something went wrong');
+        }
       }
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error:', error);
     }
   };
   
-
 
 
   return (
