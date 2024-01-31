@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { app } from "./config";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,7 +10,7 @@ interface UploadPDFResponse {
   url?: string;
 }
 
-export const uploadPDF = async (pdf: File, id: string): Promise<UploadPDFResponse> => {
+export const uploadPDF = async (pdf: File, id: string, onProgress?: (progress: number) => void): Promise<UploadPDFResponse> => {
   const pdf_Id = uuidv4();
   const storageRef = ref(storage, `user_${id}/files/${pdf_Id}`);
   const metadata = {
@@ -18,8 +18,20 @@ export const uploadPDF = async (pdf: File, id: string): Promise<UploadPDFRespons
   };
 
   try {
-    const task = await uploadBytes(storageRef, pdf, metadata);
-    const url = await getDownloadURL(task.ref);
+    const task = uploadBytesResumable(storageRef, pdf, metadata);
+
+    task.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      
+      //callback function
+      if (onProgress) {
+        onProgress(progress);
+      }
+    });
+
+    await task;
+
+    const url = await getDownloadURL(storageRef);
     
     return {
       success: true,
