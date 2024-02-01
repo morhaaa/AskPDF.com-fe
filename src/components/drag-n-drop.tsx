@@ -24,29 +24,28 @@ const DND = () => {
       setIsUploading(false);
     }
   };
-  
-  const sizeValidator = (file: File) => {
-    if (file.size > 4 * 1024 * 1024) {
-      toastError('File must be under 4MB.');
-      return {
-        code: 'size-too-large',
-        message: 'Size is larger than 4MB',
-      };
-    }
-  
-    return null;
-  };
-  
-  const uploadFileToDB = async (file: File) => {
+       
+const uploadFileToDB = async (file: File) => {
     const res = await postPDF(file, user_id, getProgress);
     if (res.success) {
       setUploadedPdf(res.file as PDF);
     } else {
-      toastError('Something went wrong');
+      toastError('Something went wrong')
       setIsUploading(false);
       setUploadingProgress(0);
       setPdfToUpload(null);
     }
+  };
+
+  const sizeValidator = (file: File) => {
+    if (file.size > 4 * 1024 * 1024) {
+      return {
+        code: 'size-too-large',
+        message: 'Size is larger than 4MB',
+      };
+    } 
+
+    return null;
   };
   
   const { getRootProps, getInputProps } = useDropzone({
@@ -55,13 +54,17 @@ const DND = () => {
     },
     validator: sizeValidator,
     maxFiles: 1,
-    onDrop: async (files) => {
-      setIsUploading(true);
-      const file = files[files.length - 1];
-      setPdfToUpload(file);
-      await uploadFileToDB(file);
-    },
-  });
+    onDrop: async (files, rejections) => {
+      if (rejections.length > 0) {
+        rejections.forEach((rj) => rj.errors.forEach((err) => toastError(err.message)));
+      } else {
+        setIsUploading(true);
+        const file = files[files.length - 1];
+        setPdfToUpload(file);
+        await uploadFileToDB(file);
+      }
+    }
+  })    
   
   const removeFile = async () => {
     try {
@@ -125,7 +128,7 @@ const DND = () => {
         <div
           {...getRootProps({
             className:
-              'dropzone flex flex-col items-center justify-center w-full h-full bg-gray-100/80 border-dashed border-2 h-60 border-gray-300 rounded-md px-6',
+              'dropzone h-32 flex flex-col items-center justify-center w-full bg-gray-100/80 border-dashed border-2 h-60 border-gray-300 rounded-md px-6',
           })}
         >
           <input {...getInputProps()} />
