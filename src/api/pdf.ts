@@ -22,8 +22,10 @@ export async function postPDF(pdf: File, user_id: string, onProgress?: (progress
       // Set progress to 80% after successful Firebase upload
       totalProgress = 80;
 
+      const formattedName = pdf.name.split('.').slice(0, -1).join('.');
+
       const pdfData: PDF = {
-        name: pdf.name,
+        name: formattedName,
         url: resFirebase.url!,
         createAt: new Date(),
         updateAt: new Date(),
@@ -54,7 +56,6 @@ export async function postPDF(pdf: File, user_id: string, onProgress?: (progress
     return { success: false, message: 'Error' };
   }
 }
-
 export async function getAllPDF(): Promise<PDF[]> {
   try {
     const res = await axios.get(`${url}/all`, {
@@ -62,16 +63,27 @@ export async function getAllPDF(): Promise<PDF[]> {
       withCredentials: true,
     });
 
-    if (res.data) {
-      return res.data;
+    if (res.data.success) {
+      const pdfList: PDF[] = res.data.files.map((file: PDF) => ({
+        _id: file._id,
+        name: file.name,
+        url: file.url,
+        size: file.size,
+        createAt: file.createAt,
+        updateAt: file.updateAt,
+      }));
+
+      return pdfList;
     } else {
-      return [];
+      console.error('Error:', res.data.message);
+      throw new Error(res.data.message);
     }
   } catch (error) {
     console.error('Error:', error);
     throw error;
   }
 }
+
 
 export async function getPDF(pdf_id: string): Promise<PDF | null> {
   try {
