@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { File, MessageCircle, Trash } from 'lucide-react';
 import moment from 'moment';
 import prettyBytes from 'pretty-bytes';
+import useWindowWidth from '@/hooks/useWidth';
+import { truncateString } from '@/utils/truncate-string';
 
 type Props = {
   pdf: PDF;
@@ -13,7 +15,31 @@ const FilePreview: React.FC<Props> = ({ pdf, deleteFile }) => {
 
   const [isHover, setIsHover] = useState<boolean>(false);
 
+  //Truncate pdf name by size of the screen
+  const windowWidth = useWindowWidth()
+  const truncateName = (name: string): string => {
+    let maxLength;
+
+    if (windowWidth <= 480) {
+      maxLength = 23;
+    } else if (windowWidth <= 768) {
+      maxLength = 40;
+    } else if (windowWidth <= 1024) {
+      maxLength = 25;
+    } else if (windowWidth <= 1280) {
+      maxLength = 30;
+    } else if (windowWidth <= 1400) {
+      maxLength = 35;
+    } else {
+      maxLength = 50;
+    }
+
+    return truncateString(name, maxLength);
+  };
+
+  //Format last modify of pdf
   const formattedDate = moment(pdf.updateAt).format('DD-MM-YYYY HH:mm');
+
 
   return (
     <div
@@ -28,16 +54,16 @@ const FilePreview: React.FC<Props> = ({ pdf, deleteFile }) => {
         </div>
       )}
 
-      <div className='border-b py-4 flex items-center gap-x-4 px-5'>
-        <div className='p-3 bg-gray-50 shadow-md border rounded-full'>
-          <File className='h-8 w-8 text-neutral-700' />
+      <div className='border-b py-3 lg:py-4 flex items-center gap-x-3 lg:gap-x-4 px-5'>
+        <div className='p-2 lg:p-3 bg-gray-50 shadow-md border rounded-full'>
+          <File className='h-7 w-7 lg:h-8 lg:w-8 text-neutral-700' />
         </div>
         <div className='flex-1 font-sans'>
-          <h5 className='text-lg font-semibold text-neutral-900 overflow-hidden whitespace-nowrap'>
-            {pdf.name}
+          <h5 className='font-bold text-neutral-900 overflow-hidden whitespace-nowrap'>
+          {truncateName(pdf.name)}
           </h5>
-          <p className='italic text-sm text-gray-500'>{formattedDate}</p>
-          <p className='italic text-sm text-gray-500'>{prettyBytes(pdf.size)}</p>
+          <p className='italic text-xs lg:text-sm text-gray-500'>{formattedDate}</p>
+          <p className='italic text-xs lg:text-sm text-gray-500'>{prettyBytes(pdf.size)}</p>
         </div>
       </div>
 

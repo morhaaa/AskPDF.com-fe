@@ -50,9 +50,9 @@ function Dashboard() {
         }
 
     return (
-        <section className="flex-1 flex flex-col w-full border px-5 md:px-10 lg:px-28 bg-slate-100 overflow-auto">
+        <section className="flex-1 flex flex-col w-full border px-5 md:px-10 lg:px-20 xl:px-28 bg-slate-100 overflow-auto">
             <div className="flex items-center justify-between py-8 border-b">
-                <h1 className="font-bold text-5xl">My Files</h1>
+                <h1 className="font-bold text-4xl xl:text-5xl">My Files</h1>
                 <UploadButton triggerButton={triggerButton}/>
             </div>
 
@@ -60,7 +60,7 @@ function Dashboard() {
             {isLoading ? (
                     <SkeletonsPreview />
                 ) : pdfList.length > 0 ? (
-                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 grid-flow-row py-6">
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 grid-flow-row py-6">
                         { pdfList.sort().map((pdf, index) => (
                             <FilePreview 
                                   key={index}

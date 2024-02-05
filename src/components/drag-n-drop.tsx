@@ -121,7 +121,7 @@ const uploadFileToDB = async (file: File) => {
             disabled={isUploading}
             onClick={()=>{}}
           >
-            Start new conversation
+            Start a conversation
           </Button>
         </div>
       ) : (

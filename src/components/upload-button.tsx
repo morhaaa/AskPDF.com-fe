@@ -15,7 +15,7 @@ type Props = {
 const UploadButton: React.FC<Props> = ({triggerButton}) => {
   return (
       <Dialog>
-        <DialogTrigger className="bg-blue-600 text-white font-semibold py-2 px-4 rounded-sm font-sans hover:bg-blue-500">
+        <DialogTrigger className="bg-blue-600 text-sm xl:text-base text-white font-semibold py-2 px-3 xl:px-4 rounded-sm font-sans hover:bg-blue-500">
             Upload PDF
         </DialogTrigger>
         <DialogContent close={triggerButton}>
