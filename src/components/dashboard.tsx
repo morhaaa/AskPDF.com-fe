@@ -4,6 +4,7 @@ import { UploadCloud } from "lucide-react";
 import UploadButton from "./upload-button";
 import SkeletonsPreview from "./skeletons-preview";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation'
 import { deletePDF, getAllPDF } from "@/api/pdf";
 import toast from "react-hot-toast";
 import toastError from "@/utils/toast-error";
@@ -14,6 +15,8 @@ function Dashboard() {
     const [pdfList, setPdfList] = useState<PDF[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false)
        
+    const router = useRouter()
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -45,15 +48,19 @@ function Dashboard() {
           }
       };
 
-      const triggerButton = () => {
+    const triggerDialog = () => {
         setIsOpen(!isOpen)
-        }
+      }
+
+    const startConversation = (pdf_id: string) => {
+        router.push(`/dashboard/${pdf_id}`)
+      }
 
     return (
         <section className="flex-1 flex flex-col w-full border px-5 md:px-10 lg:px-20 xl:px-28 bg-slate-100 overflow-auto">
             <div className="flex items-center justify-between py-8 border-b">
                 <h1 className="font-bold text-4xl xl:text-5xl">My Files</h1>
-                <UploadButton triggerButton={triggerButton}/>
+                <UploadButton triggerButton={triggerDialog}/>
             </div>
 
             <div className="flex-1">
@@ -66,6 +73,7 @@ function Dashboard() {
                                   key={index}
                                   pdf={pdf} 
                                   deleteFile={deleteFile}
+                                  startConversation={startConversation}
                             />
                         ))}
                     </div>

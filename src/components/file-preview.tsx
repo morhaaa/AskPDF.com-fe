@@ -9,9 +9,10 @@ import { truncateString } from '@/utils/truncate-string';
 type Props = {
   pdf: PDF;
   deleteFile: (file_id: string) => void;
+  startConversation: (file_id: string) => void;
 };
 
-const FilePreview: React.FC<Props> = ({ pdf, deleteFile }) => {
+const FilePreview: React.FC<Props> = ({ pdf, deleteFile, startConversation }) => {
 
   const [isHover, setIsHover] = useState<boolean>(false);
 
@@ -67,7 +68,9 @@ const FilePreview: React.FC<Props> = ({ pdf, deleteFile }) => {
         </div>
       </div>
 
-      <div className='flex items-center justify-center gap-x-2 text-neutral-500 group cursor-pointer py-2 hover:bg-blue-50'>
+      <div 
+        onClick={()=>{startConversation(pdf._id!)}}
+        className='flex items-center justify-center gap-x-2 text-neutral-500 group cursor-pointer py-2 hover:bg-blue-50'>
         <MessageCircle className='group-hover:text-blue-500 transition-colors duration-300' />
         <p className='font-semibold group-hover:text-blue-500 transition-colors duration-300'>
           Start a new conversation
