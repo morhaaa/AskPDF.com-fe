@@ -6,7 +6,6 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import DND from "./drag-n-drop"
-import { DialogClose } from "@radix-ui/react-dialog";
 
 type Props = {
   triggerButton: () => void;
