@@ -92,8 +92,16 @@ export async function getPDF(pdf_id: string): Promise<PDF | null> {
       withCredentials: true,
     });
 
-    if (res.data) {
-      return res.data;
+    if (res.data.success) {
+      const pdfFile: PDF = {
+        _id: res.data.file._id,
+        name: res.data.file.name,
+        url: res.data.file.url,
+        size: res.data.file.size,
+        createAt: res.data.file.createAt,
+        updateAt: res.data.file.updateAt,
+      }
+      return pdfFile
     } else {
       return null;
     }
