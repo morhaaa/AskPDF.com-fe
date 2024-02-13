@@ -13,7 +13,7 @@ const Loading = () => {
         </p>
       </div>
 
-      <ChatInput disabled={true} />
+      <ChatInput isDisabled={true} />
     </div>
   );
 };
