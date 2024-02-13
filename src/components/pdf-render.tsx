@@ -56,9 +56,9 @@ const PdfRender: React.FC<Props> = ({ url }) => {
   };
 
   return (
-    <section className="flex flex-col w-full h-full bg-white">
+    <section className="flex-1 flex flex-col w-full">
       {/* Navbar PDF */}
-      <div className="py-2 flex items-center justify-between px-6">
+      <div className="py-1.5 flex items-center justify-between px-6 border-b shadow-xl h-14">
         {/* left side navbar */}
         <div className="flex gap-x-1.5 ">
           {/* input for change page */}
@@ -152,8 +152,8 @@ const PdfRender: React.FC<Props> = ({ url }) => {
       </div>
 
       {/* Document */}
-      <div className="flex-1 w-full h-full">
-        <SimpleBar autoHide={false} className="h-[calc(100vh-8rem)] bg-white">
+      <div className="flex-1 w-fulll">
+        <SimpleBar autoHide={false} className="h-[calc(100vh-9.5rem)] bg-white">
           <div ref={documentRef}>
             <Document
               file={url}

@@ -4,9 +4,9 @@ import React from "react";
 
 function Page() {
   return (
-    <main className="flex flex-col items-center justify-center h-screen w-screen">
-      <Navbar/>
-      <Dashboard/>
+    <main className="flex flex-col items-center justify-center h-screen w-screen bg-gradient-to-br from-white via-zinc-100 to-white">
+      <Navbar />
+      <Dashboard />
     </main>
   );
 }
