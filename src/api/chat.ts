@@ -3,7 +3,7 @@ import axios from "axios";
 export async function streamMessages(file_id: string, message: string) {
   try {
     const reqData = { file_id, message };
-    const res = await axios.post(
+    await axios.post(
       `${process.env.NEXT_PUBLIC_BE_URL}/v1/chat/openAIstream`,
       JSON.stringify(reqData),
       {
@@ -11,8 +11,6 @@ export async function streamMessages(file_id: string, message: string) {
         withCredentials: true,
       }
     );
-
-    console.log(res);
   } catch (error) {
     console.error("Error:", error);
     throw error;
@@ -31,6 +29,27 @@ export async function getMessages(file_id: string): Promise<IMessage[]> {
       }
     );
 
+    return res.data.messages;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+export async function getOldMessages(
+  file_id: string,
+  messageDate: Date
+): Promise<IMessage[]> {
+  try {
+    const reqData = { file_id, messageDate };
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BE_URL}/v1/chat/loadOldMessages`,
+      JSON.stringify(reqData),
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
     return res.data.messages;
   } catch (error) {
     console.error("Error:", error);
