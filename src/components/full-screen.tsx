@@ -27,7 +27,11 @@ const FullScreen: React.FC<FullScreenProps> = ({ fileUrl }) => {
         }
       }}
     >
-      <Button onClick={() => setIsOpen(true)} variant={"ghost"}>
+      <Button
+        onClick={() => setIsOpen(true)}
+        variant={"ghost"}
+        className="ml-2"
+      >
         <Expand className="h-4 w-4" />
       </Button>
       <DialogContent
