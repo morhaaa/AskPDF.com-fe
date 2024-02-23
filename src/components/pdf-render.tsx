@@ -22,9 +22,16 @@ import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
 //Others
 import toastError from "@/utils/toast-error";
-import { ChevronDown, ChevronUp, Loader2, Search } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Search,
+} from "lucide-react";
 import FullScreen from "./full-screen";
 import { cn } from "@/utils/tw-utils";
+import Link from "next/link";
 
 interface Props {
   url: string | undefined;
@@ -58,45 +65,53 @@ const PdfRender: React.FC<Props> = ({ url }) => {
   return (
     <section className="flex-1 flex flex-col w-full">
       {/* Navbar PDF */}
-      <div className="py-1.5 flex items-center justify-between px-6 border-b shadow-xl h-14">
+      <div className="py-1.5 flex items-center justify-between px-4 border-b shadow-xl h-14">
         {/* left side navbar */}
-        <div className="flex gap-x-1.5 ">
-          {/* input for change page */}
-          <div className="flex items-center gap-x-2">
-            <Input
-              type="number"
-              placeholder="0"
-              className="w-12 h-8"
-              value={inputValue}
-              onChange={(e) => setInputValue(parseInt(e.target.value, 10))}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  const inputValue = parseInt(e.currentTarget.value, 10);
-                  handlePage(inputValue);
-                }
-              }}
-            />
-            <p className="text-zinc-700 text-sm space-x-1">
-              <span>/</span>
-              <span>{numPages}</span>
-            </p>
-          </div>
-          {/* arrow buttons for change page */}
-          <div>
-            <Button
-              variant="ghost"
-              className="w-8 p-0"
-              disabled={currentPage <= 1}
-              onClick={() => {
-                setCurrentPage((prev) => {
-                  const newValue = prev - 1 > 1 ? prev - 1 : 1;
-                  setInputValue(newValue);
-                  return newValue;
-                });
-              }}
-            >
-              <ChevronDown className="h-4 w-4" />
-            </Button>
+        <Link
+          href="/dashboard"
+          className=" rounded-full h-10 w-10 border bg-zinc-50 shadow-2xl flex items-center justify-center cursor-pointer hover:scale-105"
+        >
+          <ArrowLeft strokeWidth={2.4} className="h-4 w-4" />
+        </Link>
+        {/* right side navbar */}
+        <div className="flex gap-x-1">
+          {/* change pdf page */}
+          <div className="flex gap-x-1.5 px-2 lg:px-3">
+            <div>
+              <Button
+                variant="ghost"
+                className="w-8 p-0"
+                disabled={currentPage <= 1}
+                onClick={() => {
+                  setCurrentPage((prev) => {
+                    const newValue = prev - 1 > 1 ? prev - 1 : 1;
+                    setInputValue(newValue);
+                    return newValue;
+                  });
+                }}
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center gap-x-2">
+              <Input
+                type="number"
+                placeholder="0"
+                className="w-12 h-8"
+                value={inputValue}
+                onChange={(e) => setInputValue(parseInt(e.target.value, 10))}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    const inputValue = parseInt(e.currentTarget.value, 10);
+                    handlePage(inputValue);
+                  }
+                }}
+              />
+              <p className="text-zinc-700 text-sm space-x-1">
+                <span>/</span>
+                <span>{numPages}</span>
+              </p>
+            </div>
             <Button
               variant="ghost"
               className="w-8 p-0"
@@ -112,12 +127,9 @@ const PdfRender: React.FC<Props> = ({ url }) => {
               <ChevronUp className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-        {/* right side navbar */}
-        <div className="flex gap-x-1">
           {/* scale pdf */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild className="border-x rounded-none">
               <Button variant="ghost">
                 <Search className="h-4 w-4" />
                 <span>{zoom * 100}%</span>
@@ -147,12 +159,13 @@ const PdfRender: React.FC<Props> = ({ url }) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* Pdf FullScreen*/}
           <FullScreen fileUrl={url} />
         </div>
       </div>
 
       {/* Document */}
-      <div className="flex-1 w-fulll">
+      <div className="flex-1 w-full">
         <SimpleBar autoHide={false} className="h-[calc(100vh-9.5rem)] bg-white">
           <div ref={documentRef}>
             <Document
