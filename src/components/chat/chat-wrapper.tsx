@@ -1,18 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
-import Messages from "./messages";
+import React, { useEffect, useState } from "react";
+import Messages from "./messages/messages";
 import ChatInput from "./chat-input";
 import Loading from "./loading";
 import Error from "./error";
-
+import { ChatContextProvider } from "./chat-context";
+import { getMessages } from "@/api/chat";
 interface ChatWrapperProps {
   file_id: string;
 }
 
 const ChatWrapper: React.FC<ChatWrapperProps> = ({ file_id }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [messages, setMessages] = useState<IMessage[]>([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const loadMessages = async () => {
+      try {
+        const response = await getMessages(file_id);
+        setMessages(response);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error loading messages:", error);
+        setIsLoading(false);
+      }
+    };
+    loadMessages();
+  }, [file_id]);
 
   if (isLoading) return <Loading />;
 
@@ -25,12 +42,15 @@ const ChatWrapper: React.FC<ChatWrapperProps> = ({ file_id }) => {
     );
 
   return (
-    <div className="relative flex-1 bg-zinc-50 flex flex-col divide-y divide-zinc-500 justify-between">
-      <div className="flex-1 flex flex-col justify-between mb-28">
-        <Messages />
+    <ChatContextProvider file_id={file_id} messagesList={messages}>
+      <div className="relative flex-1 flex flex-col justify-between overflow-hidden">
+        <div className="h-14 border-b border-zinc-200 md:border-t-0 border-t-2 flex items-center justify-end px-4">
+          <p className="font-bold"> AskPDF - Chat</p>
+        </div>
+        <Messages file_id={file_id} />
+        <ChatInput />
       </div>
-      <ChatInput />
-    </div>
+    </ChatContextProvider>
   );
 };
 

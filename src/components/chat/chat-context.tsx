@@ -1,45 +1,103 @@
 import { streamMessages } from "@/api/chat";
-import axios from "axios";
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
+
 interface StreamResponse {
-  message: string;
-  addMessage: () => void;
+  inputMessage: string;
+  messages: IMessage[];
   isLoading: boolean;
-  handleMessage: (message: string) => void;
+  isThinking: boolean;
+  isWriting: boolean;
+  handleIsThinking: (bool: boolean) => void;
+  handleIsWriting: (bool: boolean) => void;
+  updateMessages: (msg: IMessage) => void;
+  addMessage: () => void;
+  loadOldMessages: (oldMessages: IMessage[]) => void;
+  handleInputMessage: (message: string) => void;
 }
 
 export const ChatContext = createContext<StreamResponse>({
-  message: "",
-  addMessage: () => {},
+  inputMessage: "",
+  messages: [],
   isLoading: false,
-  handleMessage: () => {},
+  isThinking: false,
+  isWriting: false,
+  addMessage: () => {},
+  handleIsThinking: () => {},
+  handleIsWriting: () => {},
+  updateMessages: () => {},
+  loadOldMessages: () => {},
+  handleInputMessage: () => {},
 });
 
 interface Props {
   file_id: string;
+  messagesList: IMessage[];
   children: ReactNode;
 }
 
-export const ChatContextProvider = ({ file_id, children }: Props) => {
-  const [message, setMessage] = useState<string>("");
+export const ChatContextProvider = ({
+  file_id,
+  messagesList,
+  children,
+}: Props) => {
+  const [messages, setMessages] = useState<IMessage[]>(messagesList);
+  const [inputMessage, setInputMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isThinking, setIsThinking] = useState<boolean>(false);
+  const [isWriting, setIsWriting] = useState<boolean>(false);
 
   const sendMessage = async (file_id: string, message: string) => {
-    await streamMessages(file_id, message);
+    setIsLoading(true);
+    streamMessages(file_id, message);
+    setInputMessage("");
+    setIsLoading(false);
   };
 
-  const addMessage = () => sendMessage(file_id, message);
-  const handleMessage = (value: string) => {
-    setMessage(value);
+  const updateMessages = (msg: IMessage) => {
+    setMessages((prev) => [...prev, msg]);
+  };
+
+  const loadOldMessages = (oldMessages: IMessage[]) => {
+    setMessages((prev) => [...oldMessages, ...prev]);
+  };
+
+  const addMessage = () => {
+    const newMessage = {
+      text: inputMessage,
+      isUserMessage: true,
+      createdAt: new Date(),
+      file_id: file_id,
+    };
+    updateMessages(newMessage);
+    setIsThinking(true);
+    sendMessage(file_id, inputMessage);
+  };
+
+  const handleInputMessage = (value: string) => {
+    setInputMessage(value);
+  };
+
+  const handleIsThinking = (bool: boolean) => {
+    setIsThinking(bool);
+  };
+  const handleIsWriting = (bool: boolean) => {
+    setIsWriting(bool);
   };
 
   return (
     <ChatContext.Provider
       value={{
-        message,
-        addMessage,
+        inputMessage,
+        messages,
         isLoading,
-        handleMessage,
+        isThinking,
+        isWriting,
+        addMessage,
+        handleIsThinking,
+        handleIsWriting,
+        updateMessages,
+        loadOldMessages,
+        handleInputMessage,
       }}
     >
       {children}
